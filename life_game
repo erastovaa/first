@@ -1,5 +1,5 @@
 import numpy as np
-import copy 
+
 
 class LifeGame(object):
     def __init__(self, m):
@@ -12,7 +12,6 @@ class LifeGame(object):
                 matrix2[i, j] = matrix1[i - 1, j - 1]
         self.ocean = matrix2
 
-
     def __get_neighbors(self, i, j):
         ox = [0, 0, -1, -1, -1, 1, 1, 1]
         oy = [-1, 1, -1, 0, 1, -1, 0, 1]
@@ -21,9 +20,8 @@ class LifeGame(object):
         fish = 0
         shrimp = 0
         for k in range(8):
-            n_x = (i + ox[k]) 
-            n_y = (j + oy[k]) 
- 
+            n_x = (i + ox[k])
+            n_y = (j + oy[k])
             if self.ocean[n_x, n_y] == 0:
                 empty += 1
             if self.ocean[n_x, n_y] == 1:
@@ -32,15 +30,14 @@ class LifeGame(object):
                 fish += 1
             if self.ocean[n_x, n_y] == 3:
                 shrimp += 1
-        neighbors = {'empty': empty, 'rock': rock, 'fish': fish, 'shrimp': shrimp}
+        neighbors = (
+            {'empty': empty, 'rock': rock, 'fish': fish, 'shrimp': shrimp})
         return neighbors
-    
+
     def get_next_generation(self):
-        
-        next_gen = copy.copy(self.ocean)
-        for i in range(len(self.ocean) - 1):
-            
-            for j in range(len(self.ocean[0]) - 1):
+        next_gen = np.copy(self.ocean)
+        for i in range(1, len(self.ocean) - 1):
+            for j in range(1, len(self.ocean[0]) - 1):
                 if self.ocean[i, j] == 0:
                     if self.__get_neighbors(i, j)['fish'] == 3:
                         next_gen[i, j] = 2
@@ -52,16 +49,12 @@ class LifeGame(object):
                         next_gen[i, j] = 0
                     if self.__get_neighbors(i, j)['fish'] < 2:
                         next_gen[i, j] = 0
-                    
                 if self.ocean[i, j] == 3:
                     if self.__get_neighbors(i, j)['shrimp'] > 3:
                         next_gen[i, j] = 0
                     if self.__get_neighbors(i, j)['shrimp'] < 2:
                         next_gen[i, j] = 0
         self.ocean = next_gen
-         
-        return next_gen[1:len(next_gen) - 1, 1:len(next_gen[0]) - 1]
-    
-         
-           
+        result = next_gen[1:len(next_gen) - 1, 1:len(next_gen[0]) - 1]
+        return result.tolist()
 
