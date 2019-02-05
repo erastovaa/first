@@ -1,6 +1,5 @@
 import numpy as np
 import copy 
-# works for one generation only
 
 class LifeGame(object):
     def __init__(self, m):
@@ -14,7 +13,7 @@ class LifeGame(object):
         self.ocean = matrix2
 
 
-    def _get_neighbors(self, i, j):
+    def __get_neighbors(self, i, j):
         ox = [0, 0, -1, -1, -1, 1, 1, 1]
         oy = [-1, 1, -1, 0, 1, -1, 0, 1]
         empty = 0
@@ -36,64 +35,33 @@ class LifeGame(object):
         neighbors = {'empty': empty, 'rock': rock, 'fish': fish, 'shrimp': shrimp}
         return neighbors
     
-    def get_next_generation(self, number):
+    def get_next_generation(self):
         
         next_gen = copy.copy(self.ocean)
         for i in range(len(self.ocean) - 1):
             
             for j in range(len(self.ocean[0]) - 1):
                 if self.ocean[i, j] == 0:
-                    if self.get_neighbors(i, j)['fish'] == 3:
+                    if self.__get_neighbors(i, j)['fish'] == 3:
                         next_gen[i, j] = 2
-                    if self.get_neighbors(i, j)['shrimp'] == 3:
+                    if self.__get_neighbors(i, j)['shrimp'] == 3:
                         next_gen[i, j] = 3
 
                 if self.ocean[i, j] == 2:
-                    if self.get_neighbors(i, j)['fish'] > 3:
+                    if self.__get_neighbors(i, j)['fish'] > 3:
                         next_gen[i, j] = 0
-                    if self.get_neighbors(i, j)['fish'] < 2:
+                    if self.__get_neighbors(i, j)['fish'] < 2:
                         next_gen[i, j] = 0
                     
                 if self.ocean[i, j] == 3:
-                    if self.get_neighbors(i, j)['shrimp'] > 3:
+                    if self.__get_neighbors(i, j)['shrimp'] > 3:
                         next_gen[i, j] = 0
-                    if self.get_neighbors(i, j)['shrimp'] < 2:
+                    if self.__get_neighbors(i, j)['shrimp'] < 2:
+                        next_gen[i, j] = 0
+        self.ocean = next_gen
+         
         return next_gen[1:len(next_gen) - 1, 1:len(next_gen[0]) - 1]
-
-               
-               
-               
-               
-   TESTS = [
-    Case(
-        board=[
-            [0, 2, 0],
-            [0, 2, 0],
-            [0, 2, 0]
-        ],
-        expected=[
-            [0, 0, 0],
-            [2, 2, 2],
-            [0, 0, 0]
-        ],
-        generation_number=1
-    ),
-    Case(
-        board=[
-            [0, 0, 0, 0],
-            [0, 3, 3, 0],
-            [0, 3, 3, 0],
-            [0, 1, 0, 1]
-        ],
-        expected=[
-            [0, 0, 0, 0],
-            [0, 3, 3, 0],
-            [0, 3, 3, 0],
-            [0, 1, 0, 1]
-        ],
-        generation_number=7
-    )
-]
-
-
+    
+         
+           
 
